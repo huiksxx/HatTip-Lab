@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "name": "My Live2D Character",
+  "license": {
+    "name": "Your model license",
+    "url": "https://example.com/license",
+    "attribution": "Character and model © Your Name",
+    "redistributable": false
+  },
+  "display": {
+    "scale": 1.0,
+    "thumbnail": "preview.png"
+  }
+}

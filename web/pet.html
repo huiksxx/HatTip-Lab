@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>HatTip Lab</title>
+    <link rel="stylesheet" href="/ui/styles.css" />
+  </head>
+  <body>
+    <main id="pet-shell" class="pet-shell" data-mode="gif">
+      <div class="top-rail pywebview-drag-region" title="拖动宠物">
+        <span class="drag-pill"><span class="status-dot" id="status-dot"></span>HatTip</span>
+      </div>
+
+      <section id="speech-bubble" class="speech-bubble" aria-live="polite" hidden>
+        <button id="bubble-close" class="bubble-close" type="button" aria-label="关闭气泡">×</button>
+        <p id="bubble-text">点点我，我们聊聊天吧。</p>
+      </section>
+
+      <section id="character-stage" class="character-stage" aria-label="HatTip Lab 桌面宠物">
+        <img
+          id="gif-pet"
+          class="gif-pet"
+          src="/ui/assets/pet-placeholder.gif"
+          alt="GIF 桌面宠物"
+          draggable="false"
+        />
+        <div id="live2d-host" class="live2d-host" hidden>
+          <canvas id="live2d-canvas"></canvas>
+        </div>
+        <button id="character-hitbox" class="character-hitbox" type="button" aria-label="和宠物说话"></button>
+      </section>
+
+      <form id="composer" class="composer" hidden>
+        <label for="message-input">想和我说什么？</label>
+        <div class="composer-row">
+          <textarea id="message-input" maxlength="2000" rows="1" placeholder="输入消息…"></textarea>
+          <button id="mic-button" class="mic-button" type="button" aria-label="按住说话">●</button>
+          <button id="send-button" class="send-button" type="submit" aria-label="发送">➤</button>
+        </div>
+        <span class="composer-hint">Enter 发送 · Shift+Enter 换行</span>
+      </form>
+
+      <div id="listening-indicator" class="listening-indicator" role="status" hidden>
+        <span class="listening-dot"></span><strong>正在聆听</strong><span>松开即可发送</span>
+      </div>
+
+      <nav id="context-menu" class="context-menu" hidden aria-label="宠物菜单">
+        <button class="primary-menu-action" type="button" data-action="settings">⚙ 设置…</button>
+        <button type="button" data-action="voice">● 打开语音输入</button>
+        <div class="menu-divider"></div>
+        <p class="menu-label">大小</p>
+        <div class="scale-row">
+          <button type="button" data-action="scale" data-value="0.8">小</button>
+          <button type="button" data-action="scale" data-value="1">中</button>
+          <button type="button" data-action="scale" data-value="1.2">大</button>
+        </div>
+        <button id="on-top-menu-item" type="button" data-action="on-top">取消置顶</button>
+        <button type="button" data-action="minimize">最小化</button>
+        <div class="menu-divider"></div>
+        <button class="danger" type="button" data-action="exit">退出 HatTip Lab</button>
+      </nav>
+
+      <div hidden aria-hidden="true">
+        <select id="provider-select"></select>
+        <select id="model-select"></select>
+        <button id="live2d-menu-item" type="button"></button>
+        <button id="install-core-menu-item" type="button"></button>
+      </div>
+    </main>
+    <script src="/ui/pet.js"></script>
+  </body>
+</html>
