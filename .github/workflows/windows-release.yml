@@ -1,0 +1,43 @@
+name: Windows release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          architecture: "x64"
+          cache: "pip"
+      - name: Install build dependencies
+        run: python -m pip install -r requirements-build.txt
+      - name: Test and audit source assets
+        run: |
+          python -m unittest discover -s tests -v
+          python tools/release_audit.py
+      - name: Build Windows application
+        run: python -m PyInstaller --noconfirm --clean HatTipLab.spec
+      - name: Audit and archive release
+        shell: pwsh
+        run: |
+          python tools/release_audit.py dist/HatTipLab
+          Compress-Archive -Path dist/HatTipLab/* -DestinationPath HatTipLab-windows-x64.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HatTipLab-windows-x64
+          path: HatTipLab-windows-x64.zip
+      - name: Attach archive to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: HatTipLab-windows-x64.zip

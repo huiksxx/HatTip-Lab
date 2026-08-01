@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>HatTip Lab 设置</title>
+    <link rel="stylesheet" href="/ui/settings.css" />
+  </head>
+  <body>
+    <main class="settings-shell">
+      <header class="page-header">
+        <div class="brand-mark" aria-hidden="true">H</div>
+        <div><p class="eyebrow">HATTIP LAB</p><h1>设置</h1><p>连接你自己的智能体、角色和声音。</p></div>
+        <span id="save-state" class="save-state">已同步</span>
+      </header>
+
+      <nav class="tab-bar" role="tablist" aria-label="设置分类">
+        <button class="tab-button active" type="button" role="tab" data-tab="agent" aria-selected="true">✦ 智能体</button>
+        <button class="tab-button" type="button" role="tab" data-tab="model" aria-selected="false">◈ 模型</button>
+        <button class="tab-button" type="button" role="tab" data-tab="voice" aria-selected="false">♪ 语音</button>
+        <button class="tab-button" type="button" role="tab" data-tab="appearance" aria-selected="false">◐ 外观</button>
+      </nav>
+
+      <form id="settings-form">
+        <section class="tab-panel active" data-panel="agent" role="tabpanel">
+          <div class="settings-card">
+            <div class="section-heading"><span class="section-icon">✦</span><div><h2>智能体后端</h2><p>绿点表示现在可用；红点表示尚未完成配置。</p></div></div>
+            <input id="provider" type="hidden" />
+            <div id="provider-list" class="provider-list"></div>
+
+            <div id="provider-hermes" class="provider-panel">
+              <div class="notice success"><strong>Hermes CLI</strong><span>使用本机的 <code>hermes chat -q</code>，无需保存 API Key。</span></div>
+            </div>
+            <div id="provider-openai" class="provider-panel" hidden>
+              <div class="field-grid">
+                <label class="field field-wide"><span>OpenAI API Key <small id="openai-key-state"></small></span><span class="secret-row"><input id="openai-api-key" type="password" autocomplete="new-password" placeholder="留空表示不修改" /><button class="quiet-button reveal" type="button" data-target="openai-api-key">显示</button></span></label>
+                <label class="field"><span>模型 ID</span><input id="openai-model" type="text" placeholder="gpt-4o-mini" /></label>
+                <label class="field"><span>服务地址</span><input id="openai-base-url" type="url" placeholder="https://api.openai.com/v1" /></label>
+              </div>
+              <label class="check-row"><input id="clear-openai-key" type="checkbox" /><span>删除已保存的 OpenAI API Key</span></label>
+            </div>
+            <div id="provider-http" class="provider-panel" hidden>
+              <div class="field-grid">
+                <label class="field field-wide"><span>OpenAI-compatible 服务地址</span><input id="http-endpoint" type="url" placeholder="http://127.0.0.1:11434" /></label>
+                <label class="field"><span>模型 ID</span><input id="http-model" type="text" placeholder="qwen2.5:7b" /></label>
+                <label class="field"><span>API Key <small id="http-key-state"></small></span><span class="secret-row"><input id="http-api-key" type="password" autocomplete="new-password" placeholder="本地服务可留空" /><button class="quiet-button reveal" type="button" data-target="http-api-key">显示</button></span></label>
+              </div>
+              <label class="check-row"><input id="clear-http-key" type="checkbox" /><span>删除已保存的 HTTP API Key</span></label>
+            </div>
+            <div class="field-grid compact-grid">
+              <label class="field"><span>回复创造性</span><input id="temperature" type="number" min="0" max="2" step="0.1" /></label>
+              <label class="field"><span>最大输出 Tokens</span><input id="max-tokens" type="number" min="64" max="128000" step="64" /></label>
+            </div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-panel="model" role="tabpanel" hidden>
+          <div class="settings-card">
+            <div class="section-heading"><span class="section-icon">◈</span><div><h2>角色模型</h2><p>模型与 Cubism Core 只保存在你的电脑中。</p></div></div>
+            <div class="field-grid mode-grid">
+              <label class="field"><span>显示模式</span><select id="mode"><option value="gif">GIF（兼容模式）</option><option value="live2d">Live2D</option></select></label>
+            </div>
+            <select id="model-id" hidden></select>
+            <div id="model-grid" class="model-grid" aria-label="Live2D 模型列表"></div>
+            <div class="action-row">
+              <button id="import-model" class="secondary-button" type="button">导入模型</button>
+              <button id="install-core" class="secondary-button" type="button">安装 Cubism Core</button>
+              <button id="model-guide" class="text-button" type="button">获取／制作说明 ↗</button>
+            </div>
+            <div id="core-state" class="notice"></div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-panel="voice" role="tabpanel" hidden>
+          <div class="settings-card">
+            <div class="section-heading"><span class="section-icon">◉</span><div><h2>说话输入</h2><p>按住快捷键或麦克风按钮说话，松开后发送。</p></div></div>
+            <label class="switch-row"><span><strong>按键说话</strong><small>全局快捷键</small></span><input id="voice-input-enabled" type="checkbox" role="switch" /></label>
+            <label class="field hotkey-field"><span>说话快捷键</span><span class="hotkey-row"><input id="push-to-talk-hotkey" type="text" readonly /><button id="record-hotkey" class="quiet-button" type="button">重新设置</button></span></label>
+          </div>
+
+          <div class="settings-card">
+            <div class="section-heading"><span class="section-icon">♪</span><div><h2>回复朗读</h2><p>三种语音可自由选择；首选引擎不可用时会自动降级，不影响文字回复。</p></div></div>
+            <label class="switch-row"><span><strong>TTS 朗读回复</strong><small id="tts-availability">正在检查本地语音…</small></span><input id="tts-enabled" type="checkbox" role="switch" /></label>
+            <label class="field field-wide"><span>首选语音引擎</span><select id="tts-engine"><option value="edge">Edge 在线语音（推荐）— 无需模型，联网即用</option><option value="piper">Piper 离线语音 — 隐私优先，需导入模型</option><option value="gpt-sovits">GPT‑SoVITS 情感语音 — 效果丰富，需安装</option></select></label>
+            <p id="tts-engine-help" class="engine-help"></p>
+            <div class="engine-status-grid">
+              <article class="engine-card" data-engine="edge"><span id="edge-dot" class="status-light"></span><div><strong>Edge 在线语音 · 推荐</strong><small id="edge-state">正在检查</small></div></article>
+              <article class="engine-card" data-engine="piper"><span id="piper-dot" class="status-light"></span><div><strong>Piper 离线语音</strong><small id="piper-state">未检测</small></div></article>
+              <article class="engine-card" data-engine="gpt-sovits"><span id="sovits-dot" class="status-light"></span><div><strong>GPT‑SoVITS</strong><small id="sovits-state">未安装</small></div></article>
+            </div>
+            <label class="field edge-voice-field"><span>Edge 中文音色</span><select id="edge-voice"><option value="zh-CN-XiaoxiaoNeural">晓晓 · 自然女声（推荐）</option><option value="zh-CN-XiaoyiNeural">晓伊 · 活泼女声</option><option value="zh-CN-YunxiNeural">云希 · 自然男声</option><option value="zh-CN-YunjianNeural">云健 · 稳重男声</option></select></label>
+            <div class="action-row">
+              <button id="import-piper" class="secondary-button" type="button">导入 Piper 模型</button>
+              <button id="install-sovits" class="primary-button" type="button">一键安装 GPT‑SoVITS</button>
+            </div>
+            <div id="install-progress" class="install-progress" hidden><div><span id="install-progress-bar"></span></div><p id="install-progress-text"></p></div>
+            <div class="field-grid voice-fields">
+              <label class="field field-wide"><span>GPT‑SoVITS 服务地址</span><input id="gpt-sovits-url" type="url" placeholder="http://127.0.0.1:9880" /></label>
+              <label class="field"><span>参考音频</span><select id="gpt-sovits-voice"></select></label>
+              <div class="field action-field"><span>音色管理</span><button id="import-voice" class="secondary-button" type="button">导入 5–15 秒音频</button></div>
+              <label class="field field-wide"><span>参考音频文字（可选）</span><input id="gpt-sovits-prompt" type="text" placeholder="填写音频中说出的内容可提升效果" /></label>
+            </div>
+            <div class="notice warning"><strong>声音权利</strong><span>只导入你本人录制或已获授权的音频；音色文件始终留在用户目录，不进入 GitHub 发布包。</span></div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-panel="appearance" role="tabpanel" hidden>
+          <div class="settings-card">
+            <div class="section-heading"><span class="section-icon">◐</span><div><h2>桌面体验</h2><p>调整角色行为与 Windows 窗口方式。</p></div></div>
+            <label class="field"><span>角色大小</span><select id="scale"><option value="0.8">小</option><option value="1">中</option><option value="1.2">大</option></select></label>
+            <label class="switch-row"><span><strong>保持置顶</strong><small>角色显示在普通窗口之上</small></span><input id="on-top" type="checkbox" role="switch" /></label>
+            <label class="switch-row"><span><strong>空闲小动作</strong><small>随机打哈欠和轻微动作</small></span><input id="idle-animations" type="checkbox" role="switch" /></label>
+            <label class="switch-row"><span><strong>最小化到托盘</strong><small>隐藏桌宠后可从通知区域恢复</small></span><input id="minimize-to-tray" type="checkbox" role="switch" /></label>
+            <div class="notice"><strong>DPI 适配</strong><span>窗口会跟随 Windows 的 125% / 150% 缩放，并保持气泡在当前屏幕内。</span></div>
+          </div>
+        </section>
+      </form>
+    </main>
+
+    <footer class="sticky-footer">
+      <p id="message" role="status"></p>
+      <div><button id="close" class="secondary-button" type="button">关闭</button><button id="save" class="primary-button" type="submit" form="settings-form">保存设置</button></div>
+    </footer>
+    <script src="/ui/settings.js"></script>
+  </body>
+</html>

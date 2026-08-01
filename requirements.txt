@@ -1,0 +1,5 @@
+Flask>=3.0,<4
+pywebview>=6.0,<7
+requests>=2.31,<3
+edge-tts==7.2.8
+# Piper uses the separately bundled MIT Windows runtime under assets/piper-runtime.
