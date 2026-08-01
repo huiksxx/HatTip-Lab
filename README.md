@@ -4,7 +4,7 @@ HatTip Lab 是一个透明、无边框的 Windows 桌宠前端。角色表现和
 
 ## 当前能力
 
-- DWM 真透明 GIF / Live2D 桌宠窗口，可长按左键拖动、缩放、置顶和最小化；
+- GIF / Live2D 桌宠窗口，可长按左键拖动、缩放、置顶和最小化；
 - 单击角色打开文字输入，点击桌面或其他窗口关闭；
 - 回复气泡根据角色位置自动显示在左侧或右侧；
 - 三个统一的流式 Provider：Hermes CLI、OpenAI Responses API、通用 HTTP；
